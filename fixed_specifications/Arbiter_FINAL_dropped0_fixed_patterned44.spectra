@@ -1,0 +1,43 @@
+module Arbiter
+
+env boolean a;
+env boolean r1;
+env boolean r2;
+sys boolean g1;
+sys boolean g2;
+
+guarantee -- guarantee1_1
+	pRespondsToS(r1=true,g1=true);
+
+guarantee -- guarantee2_1
+	pRespondsToS(r2=true,g2=true);
+
+guarantee -- guarantee3_1
+	G(a=false->g1=false&g2=false);
+
+guarantee -- guarantee4
+    G(g1=false | g2=false);
+
+assumption -- a_always
+	G(g1=true-> a=true);
+
+
+assumption -- a_always1
+	G(PREV(g1=true)-> a=true);
+
+
+pattern pRespondsToS(s, p) {
+  var { S0, S1} state;
+
+  // initial assignments: initial state
+  ini state=S0;
+
+  // safety this and next state
+  alw ((state=S0 & ((!s) | (s & p)) & next(state=S0)) |
+  (state=S0 & (s & !p) & next(state=S1)) |
+  (state=S1 & (p) & next(state=S0)) |
+  (state=S1 & (!p) & next(state=S1)));
+
+  // equivalence of satisfaction
+  alwEv (state=S0);
+}

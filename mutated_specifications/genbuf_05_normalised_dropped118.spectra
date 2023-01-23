@@ -1,0 +1,239 @@
+module genbuf_05
+	env boolean stob_req0;
+	env boolean stob_req1;
+	env boolean stob_req2;
+	env boolean stob_req3;
+	env boolean stob_req4;
+	env boolean rtob_ack0;
+	env boolean rtob_ack1;
+	env boolean full;
+	env boolean empty;
+	sys boolean btos_ack0;
+	sys boolean btos_ack1;
+	sys boolean btos_ack2;
+	sys boolean btos_ack3;
+	sys boolean btos_ack4;
+	sys boolean btor_req0;
+	sys boolean btor_req1;
+	sys boolean stateg7_0;
+	sys boolean stateg7_1;
+	sys boolean enq;
+	sys boolean deq;
+	sys boolean stateg12;
+	sys boolean slc0;
+	sys boolean slc1;
+	sys boolean slc2;
+assumption -- assumption0
+	(!stob_req0);
+assumption -- assumption1
+	(!stob_req1);
+assumption -- assumption2
+	(!stob_req2);
+assumption -- assumption3
+	(!stob_req3);
+assumption -- assumption4
+	(!stob_req4);
+assumption -- assumption5
+	(!rtob_ack0);
+assumption -- assumption6
+	(!rtob_ack1);
+assumption -- assumption7
+	(!full);
+assumption -- assumption8
+	(empty);
+assumption -- assumption9
+	G(btos_ack0 | !stob_req0);
+assumption -- assumption10
+	G(!btos_ack0 | next(!stob_req0));
+assumption -- assumption11
+	G(btos_ack1 | next(stob_req1) | !stob_req1);
+assumption -- assumption12
+	G(!btos_ack1 | next(!stob_req1));
+assumption -- assumption13
+	G(btos_ack2 | next(stob_req2) | !stob_req2);
+assumption -- assumption14
+	G(!btos_ack2 | next(!stob_req2));
+assumption -- assumption15
+	G(btos_ack3 | next(stob_req3) | !stob_req3);
+assumption -- assumption16
+	G(!btos_ack3 | next(!stob_req3));
+assumption -- assumption17
+	G( next(stob_req4) | !stob_req4);
+assumption -- assumption18
+	G(!btos_ack4 | next(!stob_req4));
+assumption -- assumption19
+	G( next(!rtob_ack0));
+assumption -- assumption20
+	G(next(rtob_ack0) | !btor_req0 );
+assumption -- assumption21
+	G(btor_req1 | next(!rtob_ack1));
+assumption -- assumption22
+	G(next(rtob_ack1) | !btor_req1 | !rtob_ack1);
+assumption -- assumption23
+	G(deq );
+assumption -- assumption24
+	G(enq | !deq | next(!full));
+assumption -- assumption25
+	G( (enq & !deq) | (enq & !enq) | (empty & next(empty) & full & next(full)) | (empty & next(empty) & !full & next(!full)) | (!empty & next(!empty) & !full & next(!full)));
+assumption -- assumption26
+	GF((btor_req0 & rtob_ack0) | (!btor_req0 & !rtob_ack0));
+assumption -- assumption27
+	GF( (!btor_req1 & !rtob_ack1));
+guarantee -- guarantee28
+	(!btos_ack0);
+guarantee -- guarantee29
+	(!btos_ack1);
+guarantee -- guarantee30
+	(!btos_ack2);
+guarantee -- guarantee31
+	(!btos_ack3);
+guarantee -- guarantee32
+	(!btos_ack4);
+guarantee -- guarantee33
+	(!btor_req0);
+guarantee -- guarantee34
+	(!btor_req1);
+guarantee -- guarantee35
+	(!stateg7_0);
+guarantee -- guarantee36
+	(stateg7_1);
+guarantee -- guarantee37
+	(!enq);
+guarantee -- guarantee38
+	(!deq);
+guarantee -- guarantee39
+	(!stateg12);
+guarantee -- guarantee40
+	(!slc0);
+guarantee -- guarantee41
+	(!slc1);
+guarantee -- guarantee42
+	(!slc2);
+guarantee -- guarantee43
+	G( next(!btos_ack0) | next(!stob_req0));
+guarantee -- guarantee44
+	G(btos_ack0 | stob_req0 | next(!btos_ack0));
+guarantee -- guarantee45
+	G(next(btos_ack0) | !btos_ack0 | !stob_req0);
+guarantee -- guarantee46
+	G( !btos_ack1);
+guarantee -- guarantee48
+	G(!btos_ack0 );
+guarantee -- guarantee49
+	G(!btos_ack0 | !btos_ack4);
+guarantee -- guarantee50
+	G(stob_req1 | next(!stob_req1));
+guarantee -- guarantee51
+	G(btos_ack1 | stob_req1 | next(!btos_ack1));
+guarantee -- guarantee52
+	G(next(btos_ack1) | !btos_ack1 );
+guarantee -- guarantee53
+	G(!btos_ack1 | !btos_ack2);
+guarantee -- guarantee54
+	G(!btos_ack1 | !btos_ack3);
+guarantee -- guarantee55
+	G(!btos_ack1 | !btos_ack4);
+guarantee -- guarantee56
+	G(stob_req2 | next(!btos_ack2) | next(!stob_req2));
+guarantee -- guarantee57
+	G(btos_ack2 | stob_req2 | next(!btos_ack2));
+guarantee -- guarantee58
+	G(next(btos_ack2) | !btos_ack2 | !stob_req2);
+guarantee -- guarantee59
+	G(!btos_ack2 | !btos_ack3);
+guarantee -- guarantee60
+	G( !btos_ack4);
+guarantee -- guarantee61
+	G(stob_req3 | next(!stob_req3));
+guarantee -- guarantee62
+	G(btos_ack3 | stob_req3 | next(!btos_ack3));
+guarantee -- guarantee63
+	G(next(btos_ack3) | !btos_ack3 | !stob_req3);
+guarantee -- guarantee64
+	G(!btos_ack3 | !btos_ack4);
+guarantee -- guarantee65
+	G(stob_req4 | next(!btos_ack4) | next(!stob_req4));
+guarantee -- guarantee66
+	G(btos_ack4 | next(!btos_ack4));
+guarantee -- guarantee67
+	G( !btos_ack4 | !stob_req4);
+guarantee -- guarantee68
+	G(next(btor_req0) );
+guarantee -- guarantee69
+	G(!btor_req0 | !btor_req1);
+guarantee -- guarantee71
+	G(next(btor_req1) | rtob_ack1 | !btor_req1);
+guarantee -- guarantee72
+	G(next(!btor_req1) );
+guarantee -- guarantee73
+	G(!btor_req0 | !btor_req1);
+guarantee -- guarantee74
+	G( stateg7_1 | (next(stateg7_1) & next(!stateg7_0)));
+guarantee -- guarantee75
+	G(btor_req1 | !btor_req0 | !stateg7_1 | (next(!stateg7_0) & next(!stateg7_1)));
+guarantee -- guarantee76
+	G(btor_req0 | btor_req1 | stateg7_1 | (next(stateg7_0) & next(!stateg7_1)));
+guarantee -- guarantee77
+	G(btor_req0 | btor_req1 | !stateg7_1 | (next(stateg7_0) & next(stateg7_1)));
+guarantee -- guarantee78
+	G(btor_req1 | stateg7_0 | stateg7_1 | !btor_req0 | (next(!stateg7_0) & next(!stateg7_1)));
+guarantee -- guarantee79
+	G(btor_req0 | stateg7_0 | !btor_req1 | (next(stateg7_1) & next(!stateg7_0)));
+guarantee -- guarantee80
+	G(stateg7_1 | !btor_req0 | !stateg7_0);
+guarantee -- guarantee81
+	G(!btor_req1 | !stateg7_1);
+guarantee -- guarantee82
+	G( next(enq) | next(!btos_ack0));
+guarantee -- guarantee83
+	G(btos_ack0 | next(!btos_ack0) );
+guarantee -- guarantee84
+	G(btos_ack1 | next(enq) | next(!btos_ack1));
+guarantee -- guarantee85
+	G((btos_ack1 & next(slc1)) | (btos_ack1 & next(slc2)) | (btos_ack1 & next(!slc0)) | (next(slc1) & next(!btos_ack1)) | (next(slc2) & next(!btos_ack1)) | (next(!btos_ack1) & next(!slc0)) );
+guarantee -- guarantee86
+	G(btos_ack2 | next(enq) | next(!btos_ack2));
+guarantee -- guarantee87
+	G((btos_ack2 & next(slc0)) | (btos_ack2 & next(slc2)) | (btos_ack2 & next(!slc1)) | (next(slc0) & next(!btos_ack2)) | (next(slc2) & next(!btos_ack2)) | (next(!btos_ack2) & next(!slc1)) | (next(btos_ack2) & next(slc1) & !btos_ack2 & next(!slc0) & next(!slc2)));
+guarantee -- guarantee88
+	G(btos_ack3 | next(enq) );
+guarantee -- guarantee89
+	G((btos_ack3 & next(slc2)) | (btos_ack3 & next(!slc0)) | (btos_ack3 & next(!slc1)) | (next(slc2) & next(!btos_ack3)) | (next(!btos_ack3) & next(!slc0)) | (next(!btos_ack3) & next(!slc1)) | (next(btos_ack3) & next(slc0) & next(slc1) & !btos_ack3 & next(!slc2)));
+guarantee -- guarantee90
+	G(btos_ack4 | next(!btos_ack4));
+guarantee -- guarantee91
+	G( (btos_ack4 & next(slc1)) | (btos_ack4 & next(!slc2)) | (next(slc0) & next(!btos_ack4)) | (next(slc1) & next(!btos_ack4)) | (next(!btos_ack4) & next(!slc2)) | (next(btos_ack4) & next(slc2) & !btos_ack4 & next(!slc0) & next(!slc1)));
+guarantee -- guarantee92
+	G(next(!enq) | (next(btos_ack0) & !btos_ack0) | (next(btos_ack1) & !btos_ack1) | (next(btos_ack2) & !btos_ack2) | (next(btos_ack3) & !btos_ack3) | (next(btos_ack4) & !btos_ack4));
+guarantee -- guarantee93
+	G(next(deq) | next(rtob_ack0) | !rtob_ack0);
+guarantee -- guarantee94
+	G(next(deq) | next(rtob_ack1) | !rtob_ack1);
+guarantee -- guarantee95
+	G( (rtob_ack0 & next(!rtob_ack0)) | (rtob_ack1 & next(!rtob_ack1)));
+guarantee -- guarantee96
+	G(deq | !enq | !full);
+guarantee -- guarantee97
+	G(!deq | !empty);
+guarantee -- guarantee98
+	G( next(!stateg12));
+guarantee -- guarantee99
+	G(stateg12 | next(!stateg12));
+guarantee -- guarantee100
+	G( empty | stateg12 | next(stateg12));
+guarantee -- guarantee101
+	G(deq | next(stateg12) | !stateg12);
+guarantee -- guarantee102
+	G(!deq | !stateg12 | next(!stateg12));
+guarantee -- guarantee103
+	GF((btos_ack0 & stob_req0) | (!btos_ack0 & !stob_req0));
+guarantee -- guarantee104
+	GF((btos_ack1 & stob_req1) | (!btos_ack1 & !stob_req1));
+guarantee -- guarantee105
+	GF((btos_ack2 & stob_req2) | (!btos_ack2 & !stob_req2));
+guarantee -- guarantee106
+	GF((btos_ack3 & stob_req3) | (!btos_ack3 & !stob_req3));
+guarantee -- guarantee107
+	GF( (!btos_ack4 & !stob_req4));
+guarantee -- guarantee108
+	GF(!stateg12);

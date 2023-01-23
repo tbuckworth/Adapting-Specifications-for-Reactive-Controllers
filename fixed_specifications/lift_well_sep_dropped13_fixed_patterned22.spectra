@@ -1,0 +1,55 @@
+module Lift
+env boolean b1;
+env boolean b2;
+env boolean b3;
+env boolean c;
+sys boolean f1;
+sys boolean f2;
+sys boolean f3;
+assumption -- initial_assumptions
+	(b1=false & b2=false & b3=false);
+assumption -- button1_off_at_floor1
+	G(b3=true-> f1=false);
+
+assumption -- button2_off_at_floor2
+	G(b2=false | next(b2=false) | f2=false);
+assumption -- button3_off_at_floor3
+	G(b3=false | next(b3=false) | f3=false);
+assumption -- button1_stays_on
+	G(next(b1=true) | c=true | f1=true | b1=false);
+assumption -- button2_stays_on
+	G(next(b2=true) | c=true | b2=false);
+assumption -- button3_stays_on
+	G(next(b3=true) | f3=true | b3=false);
+guarantee -- initial_guarantees
+	(f1=true & f2=false & f3=false);
+guarantee -- one_floor
+	G(f1=true );
+guarantee -- one_floor_only1
+	G(f1=false | (f2=false & f3=false));
+guarantee -- one_floor_only2
+	G(f2=false | (f1=false & f3=false));
+guarantee -- move_one_max1
+	G(f1=false | (b2=true & next(f2=true)) | (c=true & next(f1=true)) | (next(f1=true) & b2=false & b3=false));
+guarantee -- move_one_max2
+	G(f2=false | (b1=true & next(f1=true)) | (b3=true & next(f3=true)) | (c=true & next(f2=true)) | (next(f2=true) & b1=false & b3=false));
+guarantee -- move_one_max3
+	G(f3=false | (b1=true & next(f2=true)) | (b2=true & next(f2=true)) | (c=true & next(f3=true)) );
+guarantee -- button2_answered
+	pRespondsToS(b2=true,f2=true|c=true);
+
+pattern pRespondsToS(s, p) {
+  var { S0, S1} state;
+
+  // initial assignments: initial state
+  ini state=S0;
+
+  // safety this and next state
+  alw ((state=S0 & ((!s) | (s & p)) & next(state=S0)) |
+  (state=S0 & (s & !p) & next(state=S1)) |
+  (state=S1 & (p) & next(state=S0)) |
+  (state=S1 & (!p) & next(state=S1)));
+
+  // equivalence of satisfaction
+  alwEv (state=S0);
+}

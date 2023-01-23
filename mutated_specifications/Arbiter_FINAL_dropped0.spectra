@@ -1,0 +1,23 @@
+module Arbiter
+
+env boolean a;
+env boolean r1;
+env boolean r2;
+sys boolean g1;
+sys boolean g2;
+
+guarantee -- guarantee1_1
+	G(r1->F(g1));
+
+guarantee -- guarantee2_1
+	G(r2->F(g2));
+
+guarantee -- guarantee3_1
+	G(!a->!g1&!g2);
+
+guarantee -- guarantee4
+    G(!g1 | !g2);
+
+assumption -- a_always
+    G(a);
+

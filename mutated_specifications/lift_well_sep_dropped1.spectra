@@ -1,0 +1,44 @@
+module Lift
+env boolean b1;
+env boolean b2;
+env boolean b3;
+env boolean c;
+sys boolean f1;
+sys boolean f2;
+sys boolean f3;
+assumption -- initial_assumptions
+	(!b1 & !b2 & !b3);
+assumption -- button1_off_at_floor1
+	G(!b1 | next(!b1) | !f1);
+assumption -- button2_off_at_floor2
+	G(!b2 | next(!b2) | !f2);
+assumption -- button3_off_at_floor3
+	G(!b3 | next(!b3) | !f3);
+assumption -- button1_stays_on
+	G(next(b1) | c | f1 | !b1);
+assumption -- button2_stays_on
+	G(next(b2) | f2 | !b2);
+assumption -- button3_stays_on
+	G(next(b3) | c | f3 | !b3);
+guarantee -- initial_guarantees
+	(f1 & !f2 & !f3);
+guarantee -- one_floor
+	G(f1 | f2 | f3);
+guarantee -- one_floor_only1
+	G(!f1 | (!f2 & !f3));
+guarantee -- one_floor_only2
+	G(!f2 | (!f1 & !f3));
+guarantee -- one_floor_only3
+	G(!f3 | (!f1 & !f2));
+guarantee -- move_one_max1
+	G(!f1 | (b2 & next(f2)) | (b3 & next(f2)) | (c & next(f1)) | (next(f1) & !b2 & !b3));
+guarantee -- move_one_max2
+	G(!f2 | (b1 & next(f1)) | (b3 & next(f3)) | (c & next(f2)) | (next(f2) & !b1 & !b3));
+guarantee -- move_one_max3
+	G(!f3 | (b1 & next(f2)) | (b2 & next(f2)) | (c & next(f3)) | (next(f3) & !b1 & !b2));
+guarantee -- button1_answered
+	G(b1->F(f1|c));
+guarantee -- button2_answered
+	G(b2->F(f2|c));
+guarantee -- button3_answered
+	G(b3->F(f3|c));

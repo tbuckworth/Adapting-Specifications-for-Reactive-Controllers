@@ -1,0 +1,43 @@
+module TrafficE2
+env boolean cara;
+env boolean carb;
+env boolean emergency;
+sys boolean greena;
+sys boolean greenb;
+assumption -- no_emergency_often:
+	GF(emergency=false);
+guarantee -- lights_not_both_red:
+		G( emergency=false| greenb=false);
+
+guarantee -- carA_leads_to_greenA:
+	pRespondsToS(cara=true,greena=true);
+guarantee -- carB_lead_to_greenB:
+	pRespondsToS(carb=true,greenb=true);
+guarantee -- red_when_emergency:
+	G(emergency=false | (greena=false & greenb=false));
+assumption -- carA_idle_when_red:
+	G(next(cara=true) | emergency=true | cara=false);
+assumption -- carB_idle_when_red:
+	G(emergency=true-> emergency=true | greenb=true );
+
+assumption -- carA_moves_when_green:
+	G( cara=false | next(cara=false) );
+assumption -- carB_moves_when_green:
+	G(emergency=true | carb=false | next(carb=false) | greenb=false);
+
+
+pattern pRespondsToS(s, p) {
+  var { S0, S1} state;
+
+  // initial assignments: initial state
+  ini state=S0;
+
+  // safety this and next state
+  alw ((state=S0 & ((!s) | (s & p)) & next(state=S0)) |
+  (state=S0 & (s & !p) & next(state=S1)) |
+  (state=S1 & (p) & next(state=S0)) |
+  (state=S1 & (!p) & next(state=S1)));
+
+  // equivalence of satisfaction
+  alwEv (state=S0);
+}

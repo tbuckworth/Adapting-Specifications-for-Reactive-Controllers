@@ -1,0 +1,35 @@
+module TrafficE2
+env boolean cara;
+env boolean carb;
+env boolean emergency;
+sys boolean greena;
+sys boolean greenb;
+guarantee -- carA_leads_to_greenA:
+	pRespondsToS(cara=true,greena=true);
+guarantee -- carB_lead_to_greenB:
+	pRespondsToS(carb=true,greenb=true);
+assumption -- carA_idle_when_red:
+	G(next(cara=true) | emergency=true | greena=true | cara=false);
+assumption -- carB_idle_when_red:
+	G(next(carb=true) | emergency=true | greenb=true | carb=false);
+assumption -- carA_moves_when_green:
+	G(emergency=true-> emergency=true );
+
+assumption -- carB_moves_when_green:
+	G( carb=false | next(carb=false) | greenb=false);
+
+pattern pRespondsToS(s, p) {
+  var { S0, S1} state;
+
+  // initial assignments: initial state
+  ini state=S0;
+
+  // safety this and next state
+  alw ((state=S0 & ((!s) | (s & p)) & next(state=S0)) |
+  (state=S0 & (s & !p) & next(state=S1)) |
+  (state=S1 & (p) & next(state=S0)) |
+  (state=S1 & (!p) & next(state=S1)));
+
+  // equivalence of satisfaction
+  alwEv (state=S0);
+}

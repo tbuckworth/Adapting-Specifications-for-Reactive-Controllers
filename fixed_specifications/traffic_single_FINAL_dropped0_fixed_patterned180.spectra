@@ -1,0 +1,32 @@
+module TrafficE2
+env boolean car;
+env boolean emergency;
+env boolean police;
+sys boolean green;
+guarantee -- green_often:
+	pRespondsToS(car=true,green=true);
+guarantee -- no_car_often:
+	GF(car=false);
+assumption -- not_police_often:
+	GF(police=false);
+assumption -- car_idle_when_red:
+	G(next(car=true) | emergency=true | green=true | car=false);
+assumption -- car_moves_when_green:
+	G(police=false-> car=false | next(car=false) | green=false);
+
+
+pattern pRespondsToS(s, p) {
+  var { S0, S1} state;
+
+  // initial assignments: initial state
+  ini state=S0;
+
+  // safety this and next state
+  alw ((state=S0 & ((!s) | (s & p)) & next(state=S0)) |
+  (state=S0 & (s & !p) & next(state=S1)) |
+  (state=S1 & (p) & next(state=S0)) |
+  (state=S1 & (!p) & next(state=S1)));
+
+  // equivalence of satisfaction
+  alwEv (state=S0);
+}

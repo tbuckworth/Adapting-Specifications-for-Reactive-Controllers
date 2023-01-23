@@ -1,0 +1,12 @@
+module Minepump
+env boolean highwater;
+env boolean methane;
+sys boolean pump;
+guarantee -- guarantee1_1
+	G(methane=true | next(pump=true) );
+guarantee -- guarantee2_1
+	G(methane=false | next(pump=false));
+assumption -- assumption1_1
+	G(methane=true-> pump=false );
+
+

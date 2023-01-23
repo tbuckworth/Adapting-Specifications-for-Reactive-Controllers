@@ -1,0 +1,24 @@
+spec TrafficE2
+
+env boolean car;
+env boolean emergency;
+env boolean police;
+sys boolean green;
+
+
+gar green_often:
+	G(car -> F(green));
+
+gar no_car_often:
+    GF(!car);
+
+asm not_police_often:
+	GF(!police);
+
+asm car_idle_when_red:
+	G(car & !green & !emergency -> next(car));
+
+asm car_moves_when_green:
+	G(car & green & !police -> next(!car));
+
+
